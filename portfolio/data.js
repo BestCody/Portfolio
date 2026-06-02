@@ -32,9 +32,9 @@ window.PF = {
   ],
 
   artifacts: [
-    { name: "DrawScape AR",  blurb: "An Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe). Built using Kotlin, Jetpack Compose, and ARCore (SceneView), utilizing Hilt for dependency injection and Firebase for cloud persistence.", href: "https://example.com/drawscape-ar"},
-    { name: "Cambridge Battlecode Bot",     blurb: "Peaked in the top 50 out of 480 teams. Optimized robot pathfinding using BFS and a 9-force heuristic. Implemented a custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication.", href: "https://example.com/battlecode-bot"},
-    { name: "Connect4 AI", blurb: "Built a state space search API using Minimax and Alpha-Beta pruning to reduce time complexity to O(b^(d/2)) from O(b^d). Designed a custom heuristic matrix that evaluates over 800,000 future board states and returns optimal moves in under 100ms.", href: "https://example.com/connect4-ai"},
+    { name: "DrawScape AR",  blurb: "An Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe). Built using Kotlin, Jetpack Compose, and ARCore (SceneView), utilizing Hilt for dependency injection and Firebase for cloud persistence.", href: "https://github.com/BestCody/drawscapeAR"},
+    { name: "Cambridge Battlecode Bot",     blurb: "Peaked in the top 50 out of 480 teams. Optimized robot pathfinding using BFS and a 9-force heuristic. Implemented a custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication.", href: "https://battlecode.cam/"},
+    { name: "Connect4 AI", blurb: "Built a state space search API using Minimax and Alpha-Beta pruning to reduce time complexity to O(b^(d/2)) from O(b^d). Designed a custom heuristic matrix that evaluates over 800,000 future board states and returns optimal moves in under 100ms.", href: "https://connectfourai.vercel.app/"},
   ],
 
   honors: [
