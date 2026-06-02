@@ -5,17 +5,17 @@
 window.PF = {
   name: "Hanze Lou",
   title: "Research Intern @ Multicore Labs | Interested in ML systems",
-  tagline: "Builder of small worlds, chaser of large ideas.",
-  kicker: "once upon a build…",
+  tagline: "Builder of small worlds.",
+  kicker: "Aspiring Software Engineer",
 
   realms: [],
 
   quests: [
     {
-      role: "Founder & Builder",
-      org: "Stealth Venture",
-      dates: "2025 — Present",
-      desc: "Forging a new product from first principles — leading a small band on the long road from idea to launch.",
+      role: "Research Intern",
+      org: "Multicore Labs",
+      dates: "April 2026 — Present",
+      desc: "Researching GPU optimizations using concurrency",
       tags: ["Product", "0 → 1", "Leadership"],
     },
     {
