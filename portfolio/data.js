@@ -33,10 +33,9 @@ window.PF = {
   ],
 
   artifacts: [
-    { name: "Aetheris",  blurb: "A realtime collaboration tome that syncs a hundred quills without conflict.", tags: ["React", "WebSockets", "CRDT"] },
-    { name: "Lumen",     blurb: "A pocket lantern for your data — dashboards that light up insight at a glance.", tags: ["Next.js", "D3", "Postgres"] },
-    { name: "Wayfinder", blurb: "An AI familiar that maps the shortest path through any codebase.", tags: ["Python", "LLMs", "Embeddings"] },
-    { name: "Hearthnet", blurb: "A cozy social hearth where small communities gather and share.", tags: ["Swift", "Go", "gRPC"] },
+    { name: "DrawScape AR",  blurb: "An augmented reality drawing app for Android built with a team of four for Eureka Hacks '26. Users draw in 3D space using real-time hand gesture tracking via Google MediaPipe Vision Tasks, with drawings persisted to the cloud and tied to user profiles. Built with Kotlin and Jetpack Compose, ARCore via SceneView for spatial tracking, Firebase Auth and Firestore for backend, and Hilt for dependency injection. Deployed and tested on physical Android hardware.", tags: ["React", "WebSockets", "CRDT"] },
+    { name: "Cambridge Battlecode Bot",     blurb: "Peaked at a rank in the top 50s out of 480 teams. Utilized BFS and a heuristic approach based on 9 forces of influence to optimize robot pathfinding. Coded a custom bugnav navigation system for bots to follow in case it is stuck and hashing system to allow for optimal communication between bots.", tags: ["Next.js", "D3", "Postgres"] },
+    { name: "Connect4 AI", blurb: "Built a state space search API using a recursive Minimax algorithm to evaluate deep decision trees. Used Alpha-Beta pruning to eliminate sub-optimal branches, reducing search time complexity from O(b^d) to O(b^(d/2)). Designed a custom heuristic evaluation matrix, enabling the backend to process over 800,000 future board states and return optimal moves in under 100ms", tags: ["Python", "LLMs", "Embeddings"] },
   ],
 
   honors: [
