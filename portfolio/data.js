@@ -61,9 +61,9 @@ window.PF = {
   ],
 
 contact: [
-    { label: "Email",     icon: "mail",      href: "mailto:louhansen811@gmail.com",                  target: "_self" },
-    { label: "GitHub",    icon: "github",    href: "https://github.com/BestCody",                    target: "_blank" },
-    { label: "LinkedIn",  icon: "linkedin",  href: "https://www.linkedin.com/in/hansen-lou-301b2b338/", target: "_blank" },
-    { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/hansenlouu/",          target: "_blank" },
+    { label: "Email",     icon: "mail",      href: "mailto:louhansen811@gmail.com"},
+    { label: "GitHub",    icon: "github",    href: "https://github.com/BestCody"},
+    { label: "LinkedIn",  icon: "linkedin",  href: "https://www.linkedin.com/in/hansen-lou-301b2b338/"},
+    { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/hansenlouu/"},
   ],
 };
