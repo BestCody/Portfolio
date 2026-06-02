@@ -32,9 +32,9 @@ window.PF = {
   ],
 
   artifacts: [
-    { name: "DrawScape AR",  blurb: "An Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe). Built using Kotlin, Jetpack Compose, and ARCore (SceneView), utilizing Hilt for dependency injection and Firebase for cloud persistence."},
-    { name: "Cambridge Battlecode Bot",     blurb: "Peaked in the top 50 out of 480 teams. Optimized robot pathfinding using BFS and a 9-force heuristic. Implemented a custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication."},
-    { name: "Connect4 AI", blurb: "Built a state space search API using Minimax and Alpha-Beta pruning to reduce time complexity to O(b^(d/2)) from O(b^d). Designed a custom heuristic matrix that evaluates over 800,000 future board states and returns optimal moves in under 100ms."},
+    { name: "DrawScape AR",  blurb: "An Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe). Built using Kotlin, Jetpack Compose, and ARCore (SceneView), utilizing Hilt for dependency injection and Firebase for cloud persistence.", href: "https://example.com/drawscape-ar"},
+    { name: "Cambridge Battlecode Bot",     blurb: "Peaked in the top 50 out of 480 teams. Optimized robot pathfinding using BFS and a 9-force heuristic. Implemented a custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication.", href: "https://example.com/battlecode-bot"},
+    { name: "Connect4 AI", blurb: "Built a state space search API using Minimax and Alpha-Beta pruning to reduce time complexity to O(b^(d/2)) from O(b^d). Designed a custom heuristic matrix that evaluates over 800,000 future board states and returns optimal moves in under 100ms.", href: "https://example.com/connect4-ai"},
   ],
 
   honors: [
@@ -59,9 +59,9 @@ window.PF = {
   ],
 
 contact: [
-    { label: "Email",     icon: "mail",      href: "mailto:louhansen811@gmail.com"},
-    { label: "GitHub",    icon: "github",    href: "https://github.com/BestCody"},
-    { label: "LinkedIn",  icon: "linkedin",  href: "https://www.linkedin.com/in/hansen-lou-301b2b338/"},
-    { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/hansenlouu/"},
+    { label: "Email",     icon: "mail",      href: "mailto:louhansen811@gmail.com", target: "_blank"},
+    { label: "GitHub",    icon: "github",    href: "https://github.com/BestCody", target: "_blank"},
+    { label: "LinkedIn",  icon: "linkedin",  href: "https://www.linkedin.com/in/hansen-lou-301b2b338/", target: "_blank"},
+    { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/hansenlouu/", target: "_blank"},
   ],
 };
