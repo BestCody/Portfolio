@@ -5,7 +5,7 @@
 window.PF = {
   name: "Hanze Lou",
   title: "Research Intern @ Multicore Labs | Interested in ML systems",
-  tagline: "Builder of small worlds.",
+  tagline: "Builder of worlds.",
   kicker: "Aspiring Software Engineer",
 
   realms: [],
