@@ -144,16 +144,23 @@ function EndScene() {
         <Reveal className="end-sub" delay={0.05}>
           Have a project you want to collaborate on? Send a raven.
         </Reveal>
-        <Reveal className="contact" delay={0.10}>
-          {PF.contact.map((c, i) => (
-            <a href={c.href} key={i} title={c.label} aria-label={c.label}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
-                strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                {CONTACT_ICONS[c.icon]}
-              </svg>
-            </a>
-          ))}
-        </Reveal>
+         <Reveal className="contact" delay={0.10}>
+           {PF.contact.map((c, i) => (
+             <a 
+               href={c.href} 
+               key={i} 
+               title={c.label} 
+               aria-label={c.label}
+               target={c.target}
+               rel={c.target === "_blank" ? "noopener noreferrer" : undefined}
+             >
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+                 strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                 {CONTACT_ICONS[c.icon]}
+               </svg>
+             </a>
+           ))}
+         </Reveal>
         <div className="colophon">Made with love — By Hanze Lou</div>
       </div>
     </Realm>
