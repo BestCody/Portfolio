@@ -40,10 +40,10 @@ window.PF = {
   ],
 
   honors: [
-    { year: "2025", title: "Best Overall Hack",       issuer: "Hack the Valley" },
-    { year: "2024", title: "Dean's Honour List",      issuer: "Evergreen University" },
-    { year: "2024", title: "Founders Scholarship",    issuer: "The Builders Fund" },
-    { year: "2023", title: "1st · Algorithms Joust",  issuer: "ACM Regional" },
+    { year: "2026", title: "USACO Gold",       issuer: "Top 10% on USACO" },
+    { year: "2026", title: "Codeforces Expert",      issuer: "Top 10% on Codeforces" },
+    { year: "2024", title: "Beaver Computing Competition Honor Roll",    issuer: "Top 1% on Beaver Computing Competition" },
+    { year: "2023", title: "Score of 45 on Canadian Senior Mathematics Competition",  issuer: "Top 3% on Canadian Senior Mathematics Competition" },
   ],
 
   lore: {
