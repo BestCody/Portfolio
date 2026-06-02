@@ -33,9 +33,9 @@ window.PF = {
   ],
 
   artifacts: [
-    { name: "DrawScape AR",  blurb: "An augmented reality drawing app for Android built with a team of four for Eureka Hacks '26. Users draw in 3D space using real-time hand gesture tracking via Google MediaPipe Vision Tasks, with drawings persisted to the cloud and tied to user profiles. Built with Kotlin and Jetpack Compose, ARCore via SceneView for spatial tracking, Firebase Auth and Firestore for backend, and Hilt for dependency injection. Deployed and tested on physical Android hardware.", tags: ["React", "WebSockets", "CRDT"] },
-    { name: "Cambridge Battlecode Bot",     blurb: "Peaked at a rank in the top 50s out of 480 teams. Utilized BFS and a heuristic approach based on 9 forces of influence to optimize robot pathfinding. Coded a custom bugnav navigation system for bots to follow in case it is stuck and hashing system to allow for optimal communication between bots.", tags: ["Next.js", "D3", "Postgres"] },
-    { name: "Connect4 AI", blurb: "Built a state space search API using a recursive Minimax algorithm to evaluate deep decision trees. Used Alpha-Beta pruning to eliminate sub-optimal branches, reducing search time complexity from O(b^d) to O(b^(d/2)). Designed a custom heuristic evaluation matrix, enabling the backend to process over 800,000 future board states and return optimal moves in under 100ms", tags: ["Python", "LLMs", "Embeddings"] },
+    { name: "DrawScape AR",  blurb: "An Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe). Built using Kotlin, Jetpack Compose, and ARCore (SceneView), utilizing Hilt for dependency injection and Firebase for cloud persistence.", tags: ["React", "WebSockets", "CRDT"] },
+    { name: "Cambridge Battlecode Bot",     blurb: "Peaked in the top 50 out of 480 teams. Optimized robot pathfinding using BFS and a 9-force heuristic. Implemented a custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication.", tags: ["Next.js", "D3", "Postgres"] },
+    { name: "Connect4 AI", blurb: "Built a state space search API using Minimax and Alpha-Beta pruning to reduce time complexity to O(b^(d/2)) from O(b^d). Designed a custom heuristic matrix that evaluates over 800,000 future board states and returns optimal moves in under 100ms.", tags: ["Python", "LLMs", "Embeddings"] },
   ],
 
   honors: [
