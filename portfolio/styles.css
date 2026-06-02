@@ -120,8 +120,8 @@ body {
   position: fixed; inset: 0; z-index: 45; pointer-events: none;
   opacity: 0; transition: opacity 0.8s ease;
   background:
-    radial-gradient(circle 240px at var(--gx, 50%) var(--gy, 40%), rgba(255, 244, 214, 0.20), rgba(255,244,214,0.06) 55%, transparent 72%),
-    radial-gradient(circle 460px at var(--gx, 50%) var(--gy, 40%), transparent 36%, rgba(8, 18, 12, 0.5) 100%);
+    radial-gradient(circle 240px at var(--gx, 50%) var(--gy, 40%), rgba(255, 244, 214, 0.45), rgba(95, 192, 140, 0.20) 55%, transparent 72%),
+    radial-gradient(circle 460px at var(--gx, 50%) var(--gy, 40%), transparent 36%, rgba(8, 18, 12, 0.65) 100%);
 }
 .cursor-glow.on { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .cursor-glow { display: none; } }
