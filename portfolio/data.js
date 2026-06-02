@@ -14,16 +14,14 @@ window.PF = {
     {
       role: "Research Intern",
       org: "Multicore Labs",
-      dates: "April 2026 — Present",
+      dates: "May 2026 — Present",
       desc: "Researching GPU optimizations using concurrency",
-      tags: ["Product", "0 → 1", "Leadership"],
     },
     {
-      role: "Software Engineering Intern",
-      org: "Northwind Labs",
-      dates: "Summer 2024",
-      desc: "Charted new features across the core platform and slew a fair share of bugs along the way.",
-      tags: ["Full-stack", "TypeScript", "APIs"],
+      role: "Researcher",
+      org: "Raouf Boutaba Research Group",
+      dates: "April 2026 - Present ",
+      desc: "Researching ways to improve networks through neural receivers and network splicing",
     },
     {
       role: "Undergraduate Researcher",
