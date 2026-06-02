@@ -28,14 +28,13 @@ window.PF = {
       org: "Oakville Trafalgar High School",
       dates: "2025 — Present",
       desc: "Teaching over 40 club members to build projects ranging from software to game dev, building over 10+ projects every year. Also prepares club members for Computing Olympiad competitions like USACO through lessons.",
-      tags: ["Research", "Systems", "Go"],
     },
   ],
 
   artifacts: [
-    { name: "DrawScape AR",  blurb: "An Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe). Built using Kotlin, Jetpack Compose, and ARCore (SceneView), utilizing Hilt for dependency injection and Firebase for cloud persistence.", tags: ["React", "WebSockets", "CRDT"] },
-    { name: "Cambridge Battlecode Bot",     blurb: "Peaked in the top 50 out of 480 teams. Optimized robot pathfinding using BFS and a 9-force heuristic. Implemented a custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication.", tags: ["Next.js", "D3", "Postgres"] },
-    { name: "Connect4 AI", blurb: "Built a state space search API using Minimax and Alpha-Beta pruning to reduce time complexity to O(b^(d/2)) from O(b^d). Designed a custom heuristic matrix that evaluates over 800,000 future board states and returns optimal moves in under 100ms.", tags: ["Python", "LLMs", "Embeddings"] },
+    { name: "DrawScape AR",  blurb: "An Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe). Built using Kotlin, Jetpack Compose, and ARCore (SceneView), utilizing Hilt for dependency injection and Firebase for cloud persistence."},
+    { name: "Cambridge Battlecode Bot",     blurb: "Peaked in the top 50 out of 480 teams. Optimized robot pathfinding using BFS and a 9-force heuristic. Implemented a custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication."},
+    { name: "Connect4 AI", blurb: "Built a state space search API using Minimax and Alpha-Beta pruning to reduce time complexity to O(b^(d/2)) from O(b^d). Designed a custom heuristic matrix that evaluates over 800,000 future board states and returns optimal moves in under 100ms."},
   ],
 
   honors: [
