@@ -38,7 +38,7 @@ function Cover() {
   const spotRef = useRef(null);
   const frameRef = useRef(null);
 
-  /* soft light that follows cursor inside the framed video */
+  /* soft light that follows cursor anywhere on the page, projected into the framed video */
   useEffect(() => {
     const frame = frameRef.current;
     const spot = spotRef.current;
@@ -56,12 +56,9 @@ function Cover() {
         raf = 0;
       });
     };
-    const onLeave = () => spot.classList.remove("lit");
-    frame.addEventListener("pointermove", onMove);
-    frame.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointermove", onMove, { passive: true });
     return () => {
-      frame.removeEventListener("pointermove", onMove);
-      frame.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointermove", onMove);
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
@@ -104,10 +101,16 @@ function Cover() {
           <div className="lz-col-title">Projects</div>
           <div className="lz-rule" />
           {PF.artifacts.map((p, i) => (
-            <div className="lz-proj" key={i}>
+            <a
+              className="lz-proj lz-proj-link"
+              key={i}
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <div className="lz-proj-name"><span className="mk">✦</span>{p.name}</div>
               <p className="lz-proj-blurb">{p.blurb}</p>
-            </div>
+            </a>
           ))}
         </Reveal>
 
