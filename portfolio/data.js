@@ -4,8 +4,8 @@
    ============================================================ */
 window.PF = {
   name: "Hanze Lou",
-  title: "Research Intern @ Multicore Labs | Interested in ML systems",
-  tagline: "Builder of worlds.",
+  title: "Research Intern @ Multicore Labs",
+  tagline: "Interested in ML systems",
   kicker: "Aspiring Software Engineer",
 
   realms: [],
