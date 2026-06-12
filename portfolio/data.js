@@ -26,7 +26,7 @@ window.PF = {
     {
       role: "Coding Club President",
       org: "Oakville Trafalgar High School",
-      dates: "2025 — Present",
+      dates: "",
       desc: "Teaching over 40 club members to build projects ranging from software to game dev, building over 10+ projects every year. Also prepares club members for Computing Olympiad competitions like USACO through lessons.",
     },
   ],
