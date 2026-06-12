@@ -14,13 +14,13 @@ window.PF = {
     {
       role: "Research Intern",
       org: "Multicore Labs",
-      dates: "May 2026 — Present",
+      dates: "",
       desc: "Researching GPU optimizations using concurrency.",
     },
     {
       role: "Researcher",
-      org: "Raouf Boutaba Research Group",
-      dates: "April 2026 - Present ",
+      org: "Raouf Boutaba Research Lab",
+      dates: "",
       desc: "Researching ways to improve networks through neural receivers and network splicing.",
     },
     {
