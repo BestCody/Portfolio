@@ -42,7 +42,7 @@ window.PF = {
     { year: "2026", title: "Codeforces Expert",      issuer: "Top 10% on Codeforces" },
      { year: "2026", title: "Best Use of Solana",      issuer: "Won out of 60+ Projects @ Jamhacks" },
     { year: "2024", title: "Beaver Computing Competition Honor Roll",    issuer: "Top 1% on Beaver Computing Competition" },
-    { year: "2023", title: "Score of 45 on Canadian Senior Mathematics Competition",  issuer: "Top 3% on Canadian Senior Mathematics Competition" },
+    { year: "2023", title: "Lloyd Auckland Invitational Math Camp Invitee",  issuer: "One of 90 students to be invited out of 15000+ people who took the qualifier contest" },
   ],
 
   lore: {
