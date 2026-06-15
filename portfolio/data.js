@@ -41,7 +41,7 @@ window.PF = {
     { year: "2026", title: "USACO Gold",       issuer: "Top 10% on USACO" },
     { year: "2026", title: "Codeforces Expert",      issuer: "Top 10% on Codeforces" },
     { year: "2026", title: "Best Use of Solana",      issuer: "Won out of 60+ Projects @ Jamhacks" },
-    { year: "2026", title: "Lloyd Auckland Invitational Math Camp Invitee",  issuer: "One of 90 students to be invited out of 15000+ people who took the qualifier contest" },
+    { year: "2026", title: "Lloyd Auckland Invitational Math Camp Invitee",  issuer: "One of 90/15000+ people to be invited from Canadian Senior Mathematics Competition" },
     { year: "2024", title: "Beaver Computing Competition Honor Roll",    issuer: "Top 1% on Beaver Computing Competition" },
   ],
 
