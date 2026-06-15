@@ -31,11 +31,11 @@ window.PF = {
     },
   ],
 
-  artifacts: [
-    { name: "nomad",     blurb: "A fraud-prevention layer for AI agents on the Solana blockchain. Each agent carries a verifiable passport and cryptographically signs every action it takes, so businesses can confirm an agent is who it claims to be. Because every passport lives on the blockchain, an agent can never grant itself more power than it was given. The passport spells out exactly what each agent is allowed to do, granting only the narrow permissions it needs and nothing more.", href: "https://github.com/michaelmazilu/nomad"},
-    { name: "DrawScape AR",  blurb: "An Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe). Built using Kotlin, Jetpack Compose, and ARCore (SceneView), utilizing Hilt for dependency injection and Firebase for cloud persistence.", href: "https://github.com/BestCody/drawscapeAR"},
-    { name: "Cambridge Battlecode Bot",     blurb: "Peaked in the top 50 out of 480 teams. Optimized robot pathfinding using BFS and a 9-force heuristic. Implemented a custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication.", href: "https://battlecode.cam/"},
-  ],
+   artifacts: [
+     { name: "nomad", blurb: "• Fraud-prevention layer for AI agents on the Solana blockchain\n• Each agent carries a verifiable passport and cryptographically signs every action, so businesses can confirm it's who it claims to be\n• Passport lives on-chain, so an agent can only do exactly what it's authorized to and can never grant itself more power than it was given\n• Won Best Crypto Hack @ Jamhacks 2026", href: "https://github.com/michaelmazilu/nomad" },
+     { name: "DrawScape AR", blurb: "• Android AR drawing app (Eureka Hacks '26) enabling 3D space drawing via real-time hand gesture tracking (Google MediaPipe)\n• Built with Kotlin, Jetpack Compose, and ARCore (SceneView)\n• Hilt for dependency injection and Firebase for cloud persistence", href: "https://github.com/BestCody/drawscapeAR" },
+     { name: "Cambridge Battlecode Bot", blurb: "• Peaked in the top 50 out of 480 teams\n• Optimized robot pathfinding using BFS and a 9-force heuristic\n• Custom bugnav system for stuck bots and a hashing mechanism for efficient inter-bot communication", href: "https://battlecode.cam/" },
+   ],
 
   honors: [
     { year: "2026", title: "USACO Gold",       issuer: "Top 10% on USACO" },
