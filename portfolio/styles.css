@@ -270,7 +270,7 @@ body {
 .lz-title { font-family: var(--serif); font-style: italic; color: #f3eddc; font-size: clamp(20px, 2.4vw, 26px); line-height: 1.28; margin-top: 14px; }
 .lz-tag { font-family: var(--body); color: rgba(242, 234, 214, 0.84); font-size: clamp(16px, 1.8vw, 19px); margin-top: 18px; max-width: 34ch; line-height: 1.5; }
 
-.lz-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: clamp(48px, 6vw, 76px); align-items: start; }
+.lz-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: clamp(96px, 14vh, 200px); align-items: start; }
 .panel-dark {
   background: rgba(18, 39, 31, 0.52); border: 1px solid rgba(95, 192, 140, 0.26);
   backdrop-filter: blur(7px); border-radius: 13px; box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.8);
