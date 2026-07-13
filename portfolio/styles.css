@@ -326,13 +326,27 @@ body {
 
 /* up in the top-right corner of the board, above the cards so a new print emerges
    from *behind* the camera body */
+/* The camera's size is driven by viewport WIDTH but the photo pile below it used to be
+   positioned by viewport HEIGHT, so on a wide-but-short window the two collided. Both are
+   now derived from these, and the pile hangs off the camera's true bottom edge — they can
+   no longer overlap at any viewport size. --cam-ar is the artwork's height/width. */
+.deck-board {
+  --cam-w: clamp(160px, 24vw, 460px);
+  --cam-top: clamp(74px, 9vh, 108px);
+  --cam-ar: 0.941;
+  --cam-bottom: calc(var(--cam-top) + var(--cam-w) * var(--cam-ar));
+  --pile-w: clamp(230px, 27vw, 400px);
+  --photo-w: calc(var(--pile-w) - 18px);    /* the image itself, inside the 9px border */
+  /* 9px top border + the 16:9 window + the caption strip */
+  --pile-h: calc(43px + var(--photo-w) * 0.5625);
+}
 .cam {
-  /* The artwork is cropped tight (419x350), so this box IS the camera.
+  /* The artwork is cropped tight, so this box IS the camera.
      Held in from the corner so the flash burst has room and doesn't get clipped.
      pointer-events:none — it sits above the cards, and must not swallow their links. */
   position: absolute; z-index: 20; pointer-events: none;
-  top: clamp(100px, 13vh, 140px); right: clamp(0px, 3vw, 48px);
-  width: clamp(160px, 24vw, 460px);
+  top: var(--cam-top); right: clamp(0px, 3vw, 48px);
+  width: var(--cam-w);
   filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.35));
 }
 .cam-img { display: block; width: 100%; height: auto; }
@@ -346,11 +360,12 @@ body {
   100% { transform: none; }
 }
 
-/* The flash. Pinned to the centre of the lens — measured on the artwork, which puts it
-   at 48.6% / 23.3% of the camera box. Opacity is popped and faded from JS — deliberately
-   NOT a @keyframes animation, so it still fires under `prefers-reduced-motion: reduce`. */
+/* The flash. Pinned to the white flash window in the camera's top left — measured on the
+   artwork, which puts it at 29.8% / 25.2% of the camera box. Opacity is popped and faded
+   from JS — deliberately NOT a @keyframes animation, so it still fires for anyone running
+   `prefers-reduced-motion: reduce`. */
 .cam-burst {
-  position: absolute; left: 48.6%; top: 23.3%; width: 125%; aspect-ratio: 1;
+  position: absolute; left: 29.8%; top: 25.2%; width: 125%; aspect-ratio: 1;
   transform: translate(-50%, -50%);
   display: grid; place-items: center;
   border-radius: 50%; pointer-events: none; opacity: 0; z-index: 2;
@@ -372,42 +387,188 @@ body {
    print-flight maths measures this box, so keep it untransformed. */
 .deck-stage {
   flex: 1; position: relative; display: grid; place-items: center;
-  width: auto; margin-right: clamp(0px, 28vw, 400px);
+  /* the right margin is the photo pile's lane — widened to keep the bigger photo off the
+     write-up card, which the pile would otherwise overlap on a 1080p screen */
+  width: auto; margin-right: clamp(0px, 30vw, 470px);
 }
 
+/* The card is a torn sheet of paper. The artwork has ragged edges and real transparency,
+   so the sheet is painted on ::before rather than as the element's own background — that
+   lets its shadow be a drop-shadow, which follows the torn alpha instead of tracing the
+   element's rectangle and giving the illusion away. Padding is bumped so the copy clears
+   the rough edge. */
 .pol {
   grid-area: 1 / 1; position: relative; width: min(680px, 88vw);
-  padding: 14px 14px 0; border-radius: 4px; text-decoration: none;
-  background: linear-gradient(180deg, #f9f3e2, #ede2c7);
-  box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.85), 0 2px 0 rgba(255, 255, 255, 0.5) inset;
+  /* generous inset: the torn border bites ~4% into each edge, and the caption row was
+     landing on the ragged bottom-right and getting chewed up */
+  padding: 32px 58px 36px; text-decoration: none;
+  background: none; border-radius: 0; box-shadow: none;
   will-change: transform, opacity; backface-visibility: hidden;
 }
+.pol::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: url("../assets/paper.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 22px 24px rgba(0, 0, 0, 0.42));
+}
+/* the copy rides above the sheet */
+.pol-photo, .pol-caption { position: relative; z-index: 1; }
 /* darkens a card as it gets buried under newer ones */
+/* buried cards darken — masked to the sheet, or they'd darken as a hard rectangle */
 .pol::after {
-  content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none;
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background: rgba(8, 18, 13, var(--dim, 0));
+  -webkit-mask: url("../assets/paper.png") center / 100% 100% no-repeat;
+  mask: url("../assets/paper.png") center / 100% 100% no-repeat;
 }
+/* the copy sits straight on the card stock — no inner panel */
 .pol-photo {
-  position: relative; min-height: 292px; display: flex; flex-direction: column;
-  padding: 20px 24px 24px; border-radius: 2px;
-  background: linear-gradient(158deg, #1e4132 0%, #12271e 58%, #0d1d16 100%);
-  box-shadow: inset 0 0 0 1px rgba(95, 192, 140, 0.22), inset 0 40px 70px -50px rgba(234, 255, 243, 0.55);
+  position: relative; min-height: 268px; display: flex; flex-direction: column;
+  padding: 4px 6px 6px;
 }
-.pol-title { font-family: var(--serif); font-weight: 600; color: #fbf6e9; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.06; margin: 0; }
+.pol-title { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: clamp(26px, 3.2vw, 38px); line-height: 1.06; margin: 0; }
 .pol-body {
-  font-family: var(--body); color: rgba(242, 234, 214, 0.82); font-size: 16px; line-height: 1.5;
+  font-family: var(--body); color: var(--ink-soft); font-size: 16px; line-height: 1.5;
   margin: 18px 0 0; white-space: pre-line;
 }
 
 .pol-caption {
   display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
-  padding: 12px 6px 16px; color: var(--ink-soft);
+  padding: 12px 6px 0; color: var(--ink-soft);
 }
 .pol-hand { font-family: var(--hand); font-size: 24px; color: var(--ink); transform: rotate(-1deg); }
 .pol-frame-no { font-family: var(--body); font-size: 12.5px; letter-spacing: 0.16em; color: var(--ink-faint); }
 .pol-proj .pol-hand { color: var(--emerald-deep); }
-.pol-proj:hover .pol-photo { box-shadow: inset 0 0 0 1px rgba(95, 192, 140, 0.5), inset 0 40px 70px -50px rgba(234, 255, 243, 0.55); }
-.pol-proj:hover .pol-title { color: var(--emerald-glow); }
+/* emerald-glow is a light green — it would wash out against the cream stock */
+.pol-proj:hover .pol-title { color: var(--emerald-deep); }
+
+/* --- the photo pile, stacking under the camera ------------------------- */
+.deck-shots {
+  position: absolute; z-index: 3;
+  /* Sits down-left of the camera, at the spot marked on move_photocard.png. Both anchors
+     are written against the CAMERA, not against the pile's own size, so making the photo
+     bigger grows it right and down from that same top-left corner instead of swelling
+     around its centre and barging into the write-up card.
+     `right` bottoms out at the board margin so the pile can't run off the right edge, and
+     `top` is capped so a short window can't push it off the bottom. */
+  right: max(
+    clamp(0px, 3vw, 46px),
+    calc(1.33 * var(--cam-w) - var(--pile-w))
+  );
+  top: min(
+    calc(var(--cam-bottom) + 24px + 0.22 * var(--cam-w)),
+    calc(100vh - var(--pile-h) - 28px)
+  );
+  width: var(--pile-w);
+  height: var(--pile-h);
+  display: grid; place-items: center;
+  pointer-events: none;
+}
+.shot {
+  grid-area: 1 / 1; position: relative; margin: 0; width: 100%;
+  display: block; text-decoration: none;   /* the frame is an <a> when the project is live */
+  padding: 9px 9px 0; border-radius: 3px;
+  background: linear-gradient(180deg, #fffdf7, #f0e9d8);
+  box-shadow: 0 22px 40px -18px rgba(0, 0, 0, 0.75);
+  will-change: transform, opacity; backface-visibility: hidden;
+}
+/* a photo backed by a live site is clickable — say so */
+.shot-live { cursor: pointer; }
+.shot-live .shot-win { transition: box-shadow .25s ease; }
+.shot-live:hover .shot-win, .shot-live:focus-visible .shot-win {
+  box-shadow: inset 0 0 0 3px var(--emerald-glow);
+}
+.shot-live:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 3px; }
+.shot-go { color: var(--emerald-deep); font-weight: 700; }
+.shot-live:hover .shot-cap { color: var(--emerald-deep); }
+.shot::after {  /* darkens as newer photos bury it */
+  content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none;
+  background: rgba(8, 18, 13, var(--dim, 0));
+}
+/* 16:9, so a video fills the frame exactly — no letterbox bars, nothing cropped away.
+   The site screenshots are ~2:1, so they sit far better in this than in the old square. */
+.shot-win {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 1px;
+  background: #253026; display: grid; place-items: center;
+}
+.shot-win img, .shot-win video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+}
+/* Logos and diagrams rather than screenshots. Cropping to fill would take the ends off a
+   wide wordmark, so these are fitted whole, with a margin so the artwork isn't jammed into
+   the corners of the frame. The window's background comes from the project's `bg`. */
+.shot-contain .shot-win img { object-fit: contain; padding: 7%; box-sizing: border-box; }
+/* If a media file 404s we fall back to blank film — take its background back with it, or a
+   white letterbox would be left behind with invisible white-on-white "undeveloped" text.
+   !important because `bg` is applied inline, and only !important outranks that. */
+.shot-blank .shot-win { background: #253026 !important; }
+/* click-to-play — opens the lightbox below rather than playing in the print */
+.shot-play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 56px; height: 56px; padding: 0; border-radius: 50%; cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: rgba(12, 22, 16, 0.55); backdrop-filter: blur(2px);
+  display: grid; place-items: center;
+  transition: background .2s ease, transform .2s ease;
+}
+.shot-play svg { width: 22px; height: 22px; fill: #fff; margin-left: 2px; }
+.shot-play:hover, .shot-play:focus-visible {
+  background: var(--emerald); transform: translate(-50%, -50%) scale(1.08);
+}
+.shot-play:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 2px; }
+/* the "not shot yet" state — real media is absolutely positioned on top and hides it */
+.shot-undev {
+  font-family: var(--hand); font-size: 17px; color: rgba(242, 234, 214, 0.42); letter-spacing: 0.04em;
+}
+/* a media path that 404s falls back to blank film rather than a broken-image icon */
+.shot-blank .shot-win img { display: none; }
+.shot-cap {
+  font-family: var(--hand); font-size: 16px; color: var(--ink);
+  padding: 7px 4px 9px; text-align: center; line-height: 1.1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* --- the video lightbox -------------------------------------------------
+   Nothing in here may carry a transform, a filter, a backdrop-filter or `contain`:
+   each of those makes an ancestor a containing block, which is the classic way to
+   break a fullscreen request coming from inside an <iframe>. That is the whole
+   reason the player was lifted out of the print, so don't put one back. */
+.lbx {
+  position: fixed; inset: 0; z-index: 200;
+  display: grid; place-items: center;
+  padding: clamp(16px, 5vh, 64px) clamp(16px, 4vw, 64px);
+  background: rgba(6, 14, 9, 0.9);
+  animation: lbx-in 180ms ease-out;
+}
+@keyframes lbx-in { from { opacity: 0; } }
+.lbx-frame {
+  /* 16:9, as big as the viewport allows, without ever letterboxing itself */
+  width: min(1180px, 100%, calc((100vh - 148px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  background: #000; border-radius: 6px; overflow: hidden;
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.9);
+}
+/* Don't try to size this in fullscreen — the UA stylesheet sets width/height with
+   !important, and UA-important outranks author-important. The scroll lock keeps the
+   containing block at the full viewport so the UA's own 100% lands on the whole screen. */
+.lbx-yt { width: 100%; height: 100%; border: 0; display: block; }
+.lbx-x {
+  position: absolute; top: clamp(12px, 2.4vh, 28px); right: clamp(12px, 2.4vw, 32px);
+  width: 46px; height: 46px; padding: 0; border-radius: 50%; cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.55); background: rgba(12, 22, 16, 0.6);
+  display: grid; place-items: center;
+  transition: background .2s ease, border-color .2s ease;
+}
+.lbx-x svg { width: 20px; height: 20px; stroke: #fff; stroke-width: 2.2; fill: none; stroke-linecap: round; }
+.lbx-x:hover, .lbx-x:focus-visible { background: var(--emerald); border-color: #fff; }
+.lbx-x:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 2px; }
+.lbx-hint {
+  position: absolute; left: 0; right: 0; bottom: clamp(10px, 2.2vh, 24px);
+  margin: 0; text-align: center;
+  font-family: var(--hand); font-size: 16px; color: rgba(242, 234, 214, 0.6);
+  /* it spans the full width, so without this it becomes an invisible strip along the bottom
+     of the backdrop that eats the very click-to-close it is advertising */
+  pointer-events: none;
+}
 
 /* --- footer hint ------------------------------------------------------- */
 .deck-foot { flex: none; display: flex; justify-content: center; width: 100%; }
@@ -423,15 +584,22 @@ body {
   .deck-board { padding-top: 88px; align-items: center; }
   .cam { position: relative; top: auto; right: auto; width: 168px; margin: 0 auto; }
   .deck-stage { margin-right: 0; width: 100%; }
+  /* no side column to stack photos in at this width — the write-up card carries the section */
+  .deck-shots { display: none; }
   .deck-flash { background: radial-gradient(70% 40% at 50% 22%, rgba(255, 246, 214, 0.8), rgba(255, 200, 110, 0.22) 42%, transparent 72%); }
   .pol { padding: 10px 10px 0; }
   .pol-photo { min-height: 250px; padding: 16px 18px 20px; }
   .pol-body { font-size: 15px; margin-top: 14px; }
 }
-/* short viewport — a 27vw camera would eat the height, so cap it */
-@media (max-height: 720px) {
-  .cam { width: clamp(150px, 19vw, 260px); top: 78px; }
+/* short viewport — a big camera plus the (now lower) photo pile would run off the bottom */
+@media (max-height: 880px) {
+  .deck-board {
+    --cam-w: clamp(150px, 19vw, 300px); --cam-top: 60px;
+    --pile-w: clamp(200px, 22vw, 320px);
+  }
   .pol-photo { min-height: 232px; }
+}
+@media (max-height: 760px) {
   .deck-hint { display: none; }
 }
 /* Only the camera's physical recoil is suppressed here — that one is genuine motion.

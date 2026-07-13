@@ -118,12 +118,43 @@ const EJECT_SCALE = 0.16;
 const SHUTTER_AT = 0.14;
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
-/* Where card `i` sits given how far the pile has advanced past it.
-   pos < -1 : still inside the camera.  pos in [-1,0] : printing — the card slides out
-   of the slot at print size, then sails across to the pile, growing as it goes.
-   pos > 0 : buried under newer prints.
-   `dx`/`dy` are the offsets from the pile's centre to the camera slot (the camera sits
-   up and to the right of the pile), and `h` is the card's height. */
+/* a project's `media` can be a still, a local clip, or a YouTube link — pick the right
+   element for it. YouTube can't go in a <video> tag, so it needs an embed. */
+const IS_VIDEO = /\.(mp4|webm|mov|m4v)$/i;
+const YT_ID = (url = "") => {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+  return m ? m[1] : null;
+};
+/* Only ever mounted after a click, so autoplay here is user-initiated (and therefore
+   allowed with sound). Controls are kept — you clicked to watch it, so you should be able
+   to pause and scrub. */
+const ytEmbed = (id) =>
+  `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+/* maxres is a crisp 16:9 still, but plenty of videos don't have one. When it's missing
+   YouTube answers 404 with a valid grey placeholder JPEG in the body — so the browser
+   happily decodes it and fires `load`, NOT `error`. An onError fallback never runs; you
+   have to catch it by size (the placeholder is 120px wide) and swap to hqdefault.
+   hqdefault is 4:3 with letterbox bars baked in, but object-fit:cover in a 16:9 frame
+   crops off almost exactly those bars. */
+const ytThumb = (id) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+const ytThumbAlt = (id) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+const YT_PLACEHOLDER_W = 200;   // the grey "no thumbnail" image is 120px wide
+
+/* Once a print has landed it just gets buried by the ones that follow. Shared by both
+   piles: how far `pos` has advanced past a print decides how deep it sinks. */
+function buriedPose(pos, rest) {
+  const d = Math.min(pos, 4.2);
+  return {
+    o: pos > 2.6 ? Math.max(0, 1 - (pos - 2.6) / 1.2) : 1,
+    dim: Math.min(0.62, d * 0.2),
+    t: `translate3d(${rest * 3.4 * d}px, ${-d * 11}px, 0) rotate(${rest * (1 + d * 0.5)}deg) scale(${1 - d * 0.05})`,
+  };
+}
+
+/* THE PHOTO — the only thing the camera prints.
+   pos < -1 : still inside the camera.  pos in [-1,0] : the paper feeds out of the slot at
+   print size, then sails down to the pile, growing as it goes.  pos > 0 : buried.
+   `dx`/`dy` are the offsets from that pile's centre up to the camera slot. */
 function polaroidPose(pos, rest, dx, dy, h) {
   if (pos <= -1) return { o: 0, dim: 0, t: `translate3d(${dx}px, ${dy}px, 0) scale(${EJECT_SCALE})` };
   if (pos < 0) {
@@ -141,12 +172,27 @@ function polaroidPose(pos, rest, dx, dy, h) {
       t: `translate3d(${x}px, ${y}px, 0) rotate(${rest * fly + (1 - fly) * 4}deg) scale(${EJECT_SCALE + (1 - EJECT_SCALE) * fly})`,
     };
   }
-  const d = Math.min(pos, 4.2);
-  return {
-    o: pos > 2.6 ? Math.max(0, 1 - (pos - 2.6) / 1.2) : 1,
-    dim: Math.min(0.62, d * 0.2),
-    t: `translate3d(${rest * 3.4 * d}px, ${-d * 11}px, 0) rotate(${rest * (1 + d * 0.5)}deg) scale(${1 - d * 0.05})`,
-  };
+  return buriedPose(pos, rest);
+}
+
+/* THE WRITE-UP CARD — a camera prints photos, not paragraphs, so this one does NOT come
+   out of the slot. It rises into place on the pile in step with the photo it belongs to,
+   settling at the same moment. Held back until just after the shutter so the photo leads. */
+function cardPose(pos, rest) {
+  if (pos <= -1) return { o: 0, dim: 0, t: `translate3d(0, 170px, 0) scale(.94)` };
+  if (pos < 0) {
+    const t = pos + 1;
+    const rise = easeOut(clamp01((t - 0.18) / 0.82));
+    /* Reach full opacity fast. A slow fade leaves this card semi-transparent while it sits
+       right on top of the previous one, and you read both texts through each other. It
+       slides up from below the pile instead, opaque, like a card being dealt onto it. */
+    return {
+      o: clamp01((t - 0.18) / 0.10),
+      dim: 0,
+      t: `translate3d(0, ${(1 - rise) * 170}px, 0) rotate(${rest * rise}deg) scale(${0.94 + 0.06 * rise})`,
+    };
+  }
+  return buriedPose(pos, rest);
 }
 
 function Camera({ camRef, burstRef }) {
@@ -165,17 +211,24 @@ function Camera({ camRef, burstRef }) {
 function Showcase() {
   const PF = window.PF;
 
-  /* the roll of film: one print per project */
+  /* the roll of film: each project prints a write-up card and a photo */
   const items = useMemo(
-    () => PF.artifacts.map((p) => ({ title: p.name, body: p.blurb, href: p.href })),
+    () => PF.artifacts.map((p) => ({
+      title: p.name, body: p.blurb, href: p.href, media: p.media, site: p.site,
+      fit: p.fit, bg: p.bg, pos: p.pos,
+    })),
     []
   );
   const N = items.length;
 
-  /* stable, seeded resting tilt so the pile looks hand-dropped, not machine-stacked */
+  /* stable, seeded resting tilts so each pile looks hand-dropped, not machine-stacked */
   const tilts = useMemo(() => {
     const rnd = mulberry(23);
     return items.map(() => (rnd() * 2 - 1) * 2.6);
+  }, [N]);
+  const shotTilts = useMemo(() => {
+    const rnd = mulberry(91);
+    return items.map(() => (rnd() * 2 - 1) * 4.5);
   }, [N]);
 
   const secRef = useRef(null);
@@ -185,24 +238,82 @@ function Showcase() {
   const camRef = useRef(null);
   const burstRef = useRef(null);
   const washRef = useRef(null);
+  const shotsRef = useRef(null);
+  const shotRefs = useRef([]);
   const [cur, setCur] = useState(0);
   /* -1 = nothing printed yet, so the first card's shutter still fires on the way in */
   const [shot, setShot] = useState(-1);
+  /* Which project's video is playing, if any. Nothing is embedded until it's clicked, so
+     no player is fetched on page load and nothing ever plays at you unasked.
+     It plays in a lightbox rather than inside the photo: a print is ~380px wide, and at
+     that size YouTube collapses to its mini chrome, where "fullscreen" is a ~12px target
+     pinned to the edge of a card that is itself rotated a few degrees. Playing it big and
+     square-on makes expanding it a non-event — and the player is no longer buried under a
+     transformed, overflow-clipped ancestor, which is exactly the sort of place browsers
+     have historically got fullscreen wrong. */
+  const [playing, setPlaying] = useState(null);
+  const openerRef = useRef(null);   // the play button that opened it — focus goes back here
+  const closeRef = useRef(null);
+  /* scrolling on buries the photo you were watching — stop it rather than leave a player
+     running under the pile */
+  useEffect(() => {
+    if (playing !== null && playing !== cur) setPlaying(null);
+  }, [cur, playing]);
 
-  /* geometry the pose maths needs: where the camera's slot sits relative to the centre of
-     the pile, and how tall each card is. Cached — measuring per frame would thrash layout. */
-  const geo = useRef({ dx: 300, dy: -260, h: [] });
+  /* While the lightbox is up, freeze the deck. The section is scroll-driven, so a stray
+     wheel tick behind the overlay advances `cur`, and the effect above then yanks the video
+     out from under you mid-sentence.
+
+     This has to be a real scroll lock on the root, NOT a cancelled wheel event: with the
+     cursor over the player, the wheel lands inside YouTube's cross-origin iframe. That event
+     never reaches our JS — nothing to preventDefault — yet the browser still chains the
+     scroll out to the page. Making the root a non-scrolling box is the only thing that stops
+     it. Chrome keeps scrollY across the switch, so the deck's transforms stay exactly put;
+     scrollTo on the way out covers any browser that doesn't. */
+  useEffect(() => {
+    if (playing === null) return;
+    const doc = document.documentElement;
+    const y = window.scrollY;
+    const prevOverflow = doc.style.overflow;
+    const prevPad = doc.style.paddingRight;
+
+    /* Hiding the overflow takes the scrollbar away with it, and the page would snap ~15px
+       wider underneath the overlay. Hold the width open with padding rather than
+       `scrollbar-gutter`: a gutter narrows the initial containing block, and the fullscreen
+       player is sized off THAT — it would come up 15px short of the screen. Padding on the
+       root leaves the containing block at the full viewport. (0 on overlay-scrollbar
+       systems, where there is nothing to compensate for.) */
+    const bar = window.innerWidth - doc.clientWidth;
+    doc.style.overflow = "hidden";
+    if (bar > 0) doc.style.paddingRight = `${bar}px`;
+
+    const onKey = (e) => { if (e.key === "Escape") setPlaying(null); };
+    window.addEventListener("keydown", onKey);
+    if (closeRef.current) closeRef.current.focus();
+
+    return () => {
+      doc.style.overflow = prevOverflow;
+      doc.style.paddingRight = prevPad;
+      if (window.scrollY !== y) window.scrollTo(0, y);
+      window.removeEventListener("keydown", onKey);
+      if (openerRef.current) openerRef.current.focus();
+    };
+  }, [playing]);
+
+  /* Geometry the print maths needs: where the camera's slot sits relative to the centre of
+     the PHOTO pile, and how tall each photo is. Only the photo is ejected from the camera,
+     so only it needs this. Cached — measuring per frame would thrash layout. */
+  const geo = useRef({ sdx: 0, sdy: -260, sh: [] });
   useEffect(() => {
     const measure = () => {
-      const cam = camRef.current, stage = stageRef.current;
-      if (!cam || !stage) return;
+      const cam = camRef.current, shots = shotsRef.current;
+      if (!cam || !shots) return;
       const c = cam.getBoundingClientRect();
-      /* the stage is inset from the right, so its centre IS the pile's centre — and unlike
-         a card it carries no transform, so it's safe to measure */
-      const s = stage.getBoundingClientRect();
-      geo.current.dx = (c.left + c.width / 2) - (s.left + s.width / 2);
-      geo.current.dy = (c.top + c.height * 0.9) - (s.top + s.height / 2);
-      geo.current.h = cardRefs.current.map((el) => (el ? el.offsetHeight : 380));
+      /* the shots stage is never transformed, so unlike a print it's safe to measure */
+      const q = shots.getBoundingClientRect();
+      geo.current.sdx = (c.left + c.width / 2) - (q.left + q.width / 2);
+      geo.current.sdy = (c.top + c.height * 0.9) - (q.top + q.height / 2);
+      geo.current.sh = shotRefs.current.map((el) => (el ? el.offsetHeight : 240));
     };
     measure();
     /* card heights shift once the webfonts land */
@@ -220,16 +331,22 @@ function Showcase() {
       const range = Math.max(1, sec.offsetHeight - vh);
       const p = Math.max(0, Math.min(1, (window.scrollY - top) / range));
       const raw = p * span - DECK_LEAD;
-      const { dx, dy, h } = geo.current;
+      const { sdx, sdy, sh } = geo.current;
 
-      for (let i = 0; i < N; i++) {
-        const el = cardRefs.current[i];
-        if (!el) continue;
-        const pose = polaroidPose(raw - i, tilts[i], dx, dy, h[i] || 380);
+      const place = (el, pose) => {
         el.style.transform = pose.t;
         el.style.opacity = pose.o;
         el.style.visibility = pose.o <= 0.01 ? "hidden" : "visible";
         el.style.setProperty("--dim", pose.dim);
+      };
+
+      for (let i = 0; i < N; i++) {
+        /* the write-up rises onto its pile; only the photo comes out of the camera */
+        const el = cardRefs.current[i];
+        if (el) place(el, cardPose(raw - i, tilts[i]));
+
+        const ph = shotRefs.current[i];
+        if (ph) place(ph, polaroidPose(raw - i, shotTilts[i], sdx, sdy, sh[i] || 240));
       }
       /* Card i's shutter goes off once its print phase reaches SHUTTER_AT, i.e. once
          raw >= i - 1 + SHUTTER_AT. Left un-clamped at the bottom so the very first
@@ -325,12 +442,118 @@ function Showcase() {
             })}
           </div>
 
+          {/* the photo pile: lands under the camera, mirroring the reference board */}
+          <div className="deck-shots" ref={shotsRef}>
+            {items.map((it, i) => {
+              const top = i === cur;
+              const yt = YT_ID(it.media);
+              /* Only the photo on TOP of the pile can be interacted with. The buried ones are
+                 still on screen (scaled and dimmed), so if they stayed clickable a keyboard
+                 user would tab through eleven invisible controls. aria-hidden can't go on the
+                 container either: it must never wrap something focusable. */
+              const interactive = top && (it.site || yt);
+              const Frame = it.site ? "a" : "figure";
+              const linkProps = it.site
+                ? {
+                    href: it.site,
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    tabIndex: top ? 0 : -1,
+                    "aria-label": `${it.title} — open the live site`,
+                    "aria-hidden": top ? undefined : "true",
+                  }
+                : { "aria-hidden": interactive ? undefined : "true" };
+              return (
+              <Frame
+                key={i}
+                {...linkProps}
+                ref={(el) => (shotRefs.current[i] = el)}
+                className={`shot ${it.site ? "shot-live" : ""} ${it.fit === "contain" ? "shot-contain" : ""}`}
+                style={{ zIndex: i + 1, pointerEvents: interactive ? "auto" : "none" }}
+              >
+                {/* `bg` paints the letterbox around a contained logo in the logo's own
+                    background colour, so the two read as a single card rather than a
+                    floating rectangle. Screenshots crop to fill and never see it. */}
+                <div className="shot-win" style={it.bg ? { background: it.bg } : undefined}>
+                  {yt ? (
+                    <React.Fragment>
+                      <img src={ytThumb(yt)} alt="" loading="lazy"
+                        onLoad={(e) => {
+                          const img = e.currentTarget;
+                          if (img.naturalWidth < YT_PLACEHOLDER_W && !img.src.includes("hqdefault"))
+                            img.src = ytThumbAlt(yt);
+                        }}
+                        onError={(e) => { e.currentTarget.src = ytThumbAlt(yt); }} />
+                      {/* click to play — nothing is fetched or played until you ask */}
+                      <button type="button" className="shot-play" tabIndex={top ? 0 : -1}
+                        aria-label={`Play the ${it.title} demo`}
+                        onClick={(e) => { openerRef.current = e.currentTarget; setPlaying(i); }}>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" /></svg>
+                      </button>
+                    </React.Fragment>
+                  ) : IS_VIDEO.test(it.media || "") ? (
+                    <video src={it.media} controls playsInline preload="metadata" />
+                  ) : it.media ? (
+                    <img src={it.media} alt="" loading="lazy"
+                      style={it.pos ? { objectPosition: it.pos } : undefined}
+                      onError={(e) => e.currentTarget.closest(".shot").classList.add("shot-blank")} />
+                  ) : null}
+                  {/* shown when a project has no media yet, or its file fails to load */}
+                  <span className="shot-undev">undeveloped</span>
+                </div>
+                {/* a div, not a figcaption: the frame may be an <a>, and figcaption is only
+                    valid inside a <figure> */}
+                <div className="shot-cap">
+                  {it.title}
+                  {it.site && <span className="shot-go"> ↗</span>}
+                  {yt && <span className="shot-go"> ▸</span>}
+                </div>
+              </Frame>
+              );
+            })}
+          </div>
+
           <div className="deck-foot">
             {/* nothing left in the roll once the last print has landed */}
             <div className={`deck-hint ${cur >= N - 1 ? "spent" : ""}`}>keep scrolling to develop the next shot</div>
           </div>
         </div>
       </div>
+
+      {/* Deliberately a sibling of .deck-sticky, not a child: the sticky clips its overflow
+          and every print inside it is rotated and scaled. Nothing between this player and
+          the viewport now has a transform, a filter or a clip, so YouTube's own fullscreen
+          button behaves like it would on any ordinary page. */}
+      {playing !== null && items[playing] && (
+        <div
+          className="lbx"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${items[playing].title} — demo video`}
+          onClick={(e) => { if (e.target === e.currentTarget) setPlaying(null); }}
+        >
+          <div className="lbx-frame">
+            <iframe
+              className="lbx-yt"
+              src={ytEmbed(YT_ID(items[playing].media))}
+              title={`${items[playing].title} — demo video`}
+              frameBorder="0"
+              allow="autoplay; encrypted-media; fullscreen"
+              allowFullScreen
+            />
+          </div>
+          <button type="button" className="lbx-x" ref={closeRef}
+            onClick={() => setPlaying(null)} aria-label="Close the video">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+          {/* Esc is wired up too, but only lands while focus is still on our side: click into
+              the player and the keypress goes to YouTube's cross-origin document instead. So
+              the hint promises the one that can never fail. */}
+          <p className="lbx-hint">click outside to close</p>
+        </div>
+      )}
     </section>
   );
 }
