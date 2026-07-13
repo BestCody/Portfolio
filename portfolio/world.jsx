@@ -170,4 +170,4 @@ function mulberry(a) {
   };
 }
 
-Object.assign(window, { Realm, Clouds, Motes, Rays, Reveal, useReveal, subscribeScroll });
+Object.assign(window, { Realm, Clouds, Motes, Rays, Reveal, useReveal, subscribeScroll, mulberry });

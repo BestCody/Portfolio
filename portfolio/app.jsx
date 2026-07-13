@@ -14,7 +14,7 @@ function Nav() {
   }, []);
 
   useEffect(() => {
-    const ids = ["tale", "end"];
+    const ids = ["tale", "work", "end"];
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting && e.intersectionRatio > 0.45) setActive(e.target.id);
@@ -23,6 +23,9 @@ function Nav() {
     ids.forEach((id) => { const el = document.getElementById(id); if (el) io.observe(el); });
     return () => io.disconnect();
   }, []);
+
+  /* nothing to link to — don't paint an empty bar across the top of the page */
+  if (!PF.realms.length) return null;
 
   return (
     <nav className={`nav ${solid ? "scrolled" : "at-top"}`}>
@@ -81,6 +84,7 @@ function App() {
       <CursorGlow />
       <main className="stage">
         <Cover />
+        <Showcase />
         <EndScene />
       </main>
     </React.Fragment>
