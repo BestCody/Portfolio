@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hanze Lou — Resume</title>
+<style>
+  :root { color-scheme: light; --ink:#171717; --muted:#555; --rule:#222; --link:#185c43; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eee; color:var(--ink); font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.28; }
+  .page { width:min(8.5in, 100%); min-height:11in; margin:24px auto; background:#fff; padding:.45in .55in; box-shadow:0 12px 36px rgba(0,0,0,.16); }
+  header { text-align:center; margin-bottom:9px; }
+  h1 { margin:0; font-family:Georgia, serif; font-size:29px; font-weight:500; letter-spacing:.02em; }
+  h2 { margin:9px 0 5px; padding-bottom:2px; border-bottom:1.5px solid var(--rule); font-family:Georgia, serif; font-size:14px; text-transform:uppercase; letter-spacing:.06em; }
+  .entry { margin:0 0 7px; }
+  .row { display:flex; justify-content:space-between; gap:18px; align-items:baseline; }
+  .row strong { font-size:12px; }
+  .right { white-space:nowrap; text-align:right; }
+  .sub { color:var(--muted); margin-top:1px; }
+  ul { margin:2px 0 0 17px; padding:0; }
+  li { margin:1px 0; }
+  .project-title { font-weight:700; }
+  .tools { font-weight:400; }
+  .actions { position:fixed; right:22px; bottom:22px; display:flex; gap:9px; }
+  .actions a, .actions button { appearance:none; border:1px solid #1f5a3e; border-radius:999px; padding:9px 15px; background:#fff; color:#1f5a3e; font:600 14px Georgia, serif; text-decoration:none; cursor:pointer; box-shadow:0 5px 16px rgba(0,0,0,.14); }
+  .actions button { background:#1f5a3e; color:#fff; }
+  @media (max-width:700px) { body{background:#fff}.page{margin:0;min-height:auto;padding:24px 20px;box-shadow:none}.row{align-items:flex-start}.actions{position:static;justify-content:center;margin:20px 0}.right{white-space:normal} }
+  @media print { body{background:#fff}.page{margin:0;width:auto;min-height:auto;padding:.35in .45in;box-shadow:none}.actions{display:none} }
+</style>
+</head>
+<body>
+<main class="page">
+  <header><h1>Hanze Lou</h1></header>
+
+  <h2>Education</h2>
+  <section class="entry">
+    <div class="row"><strong>Oakville Trafalgar High School</strong><span class="right">Oakville, ON</span></div>
+    <div class="row sub"><span>High School Diploma</span><span class="right">June 2024 – June 2027</span></div>
+    <ul>
+      <li>98% average in Grade 11 Computer Science</li>
+      <li>Score of 5 in AP Computer Science A</li>
+      <li>Score of 5 in AP Calculus BC</li>
+    </ul>
+  </section>
+
+  <h2>Experience</h2>
+  <section class="entry">
+    <div class="row"><strong>Research Intern</strong><span class="right">May 2026 – Present</span></div>
+    <div class="row sub"><span>Multicore Labs</span><span class="right">Oakville, ON</span></div>
+    <ul>
+      <li>Researching LSM tree efficiency improvements on the GPU, achieving a 30% efficiency gain over current implementations.</li>
+      <li>Designed and benchmarked novel indexing structures to reduce write amplification and improve read throughput under high-concurrency workloads.</li>
+    </ul>
+  </section>
+  <section class="entry">
+    <div class="row"><strong>Research Assistant</strong><span class="right">April 2026 – Present</span></div>
+    <div class="sub">Researched under Professor Raouf Boutaba</div>
+    <ul>
+      <li>Improved 5G network throughput efficiency by 50% over standard methods via a neural receiver and optimizations like network splicing.</li>
+      <li>Trained a CNN with residual blocks to replace traditional channel estimation and equalization in an OFDM system, evaluated across 5 ray-traced propagation effect configurations using NVIDIA Sionna RT.</li>
+      <li>Simulated a full 5G NR physical layer with a hexagonal grid topology, uplink power control, OLLA, and a proportional fairness scheduler.</li>
+    </ul>
+  </section>
+  <section class="entry">
+    <div class="row"><strong>President of Coding Club</strong><span class="right">June 2025 – Present</span></div>
+    <div class="row sub"><span>Oakville Trafalgar High School</span><span class="right">Oakville, ON</span></div>
+    <ul>
+      <li>Grew the club to over 40 members, building 10+ projects every year across software and game development.</li>
+      <li>Developed lessons to prepare club members for USACO, covering graph traversal, dynamic programming, etc.</li>
+    </ul>
+  </section>
+
+  <h2>Projects</h2>
+  <section class="entry">
+    <div class="row"><span class="project-title">Nomad <span class="tools">| Rust, Anchor, TypeScript, Fastify, Vite, Next.js, React, Web3.js</span></span><span class="right">2026</span></div>
+    <ul>
+      <li>Built a fraud-prevention layer giving AI agents a verifiable on-chain identity on Solana.</li>
+      <li>Designed cryptographic passport system requiring agents to sign every action for verification.</li>
+      <li>Won Best Use of Solana out of 60+ projects at Jamhacks 2026.</li>
+    </ul>
+  </section>
+  <section class="entry">
+    <div class="row"><span class="project-title">CRAP <span class="tools">| FastAPI, Next.js, React, OpenAI API, FAISS, XGBoost, scikit-learn, MCP</span></span><span class="right">2026</span></div>
+    <ul>
+      <li>Built a platform converting clinical trial protocol PDFs into structured, FDA-aligned CDISC USDM data.</li>
+      <li>Trained an XGBoost model with SHAP explainability to predict trial duration-overrun risk against 591K+ historical studies.</li>
+      <li>Shipped an MCP server enabling natural-language search over the trial database.</li>
+      <li>Won 3rd Place at vsHacks 2026 out of 58 projects.</li>
+    </ul>
+  </section>
+  <section class="entry">
+    <div class="row"><span class="project-title">MonadLabs <span class="tools">| Python, Flask, React, Fireworks AI, Docling, Weaviate, Whisper</span></span><span class="right">2026</span></div>
+    <ul>
+      <li>Built a pipeline converting documents, images, audio, and video into a unified intermediate representation.</li>
+      <li>Integrated Docling, vLLM-served Whisper with speaker diarization, and Florence-2 for multimodal ingestion.</li>
+      <li>Developed a document assistant using an agentic tool-calling loop with grounded citations.</li>
+    </ul>
+  </section>
+
+  <h2>Awards</h2>
+  <ul>
+    <li>USACO Gold (Top 10%)</li>
+    <li>Codeforces Expert (Top 10%)</li>
+    <li>Ranked in top 40 out of 800 teams in UC Berkeley’s Annual Programming Competition</li>
+    <li>Honor Roll at Waterloo Beaver Computing Competition (Top 1%)</li>
+    <li>Invited to Lloyd Auckland Mathematics Workshop (Top 90/15000)</li>
+  </ul>
+</main>
+<div class="actions">
+  <a href="index.html">Back to portfolio</a>
+  <button type="button" onclick="window.print()">Print / Save PDF</button>
+</div>
+</body>
+</html>
